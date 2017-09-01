@@ -1,20 +1,13 @@
-# Specify the source files, target files, the build directories,
-# and the install directory
+# Specify the target files and the libraries to link to.
 OUTPUTS = poissonPvalues gaussianPvalues pValueCombination
-LIBCDF = libcdf.a
-CDFDIR = cdflib
-
-# Compilation flags
-CFLAGS = -Wall
-
-# Add Gnu Scientific Library and Math Library to link string
-LDFLAGS = -lgsl -lm
+LIBCDF = cdflib/libcdf.a
+LDLIBS = -lgsl -lm
 
 # Default target
 .PHONY: all
 all: $(OUTPUTS)
-$(OUTPUTS):
-	$(CXX) -o $@ $@.cpp $(CDFDIR)/$(LIBCDF) $(LDFLAGS)
+$(OUTPUTS): %: %.cpp
+	$(CXX) -o $@ $< $(LIBCDF) $(LDLIBS)
 
 # Clean up directory
 .PHONY: clean
