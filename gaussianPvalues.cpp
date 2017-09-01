@@ -37,7 +37,7 @@ int main()
         cout << "Computing the significance of a *deficit*." << endl;
     }
     cout << "\nP-Value      Nsigmas" << endl;
-    cout << "--------------------" << endl;
+    cout << "---------------------" << endl;
 
 // First ignore uncertainty on Gaussian mean when computing p-value
     double pVal0, nSig0;
@@ -48,7 +48,7 @@ int main()
     }
     pVal0 *= pAdjustment;
     nSig0  = gsl_cdf_ugaussian_Qinv(pVal0);
-    cout << setw(11) << left << pVal0 << "  " << setw(7) << left << nSig0 << "  (ignoring uncertainty on Gaussian mean)" << endl;
+    cout << setw(11) << left << pVal0 << "  " << setw(8) << left << nSig0 << "  (ignoring uncertainty on Gaussian mean)" << endl;
 
 // Try a Gaussian prior for the Gaussian mean
     double combStD, pVal1, nSig1;
@@ -60,7 +60,7 @@ int main()
     }
     pVal1 *= pAdjustment;
     nSig1  = gsl_cdf_ugaussian_Qinv(pVal1);
-    cout << setw(11) << left << pVal1 << "  " << setw(7) << left << nSig1 << "  (prior-pred., Gaussian prior)" << endl;
+    cout << setw(11) << left << pVal1 << "  " << setw(8) << left << nSig1 << "  (prior-pred., Gaussian prior)" << endl;
 
     cout << bline << '\n' << endl;
     return 0;
