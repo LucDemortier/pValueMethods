@@ -1,0 +1,5 @@
+CDFLIB is a collection of routines for cumulative distribution functions, their inverses, and other parameters, compiled and written by Barry W. Brown, James Lovato, and Kathy Russell. It was originally written in FORTRAN, but a C++ version is available on [John Burkardt's website](http://people.sc.fsu.edu/~jburkardt/cpp_src/cdflib/cdflib.html). I split the original file into individual routines and wrote a [``Makefile``](https://github.com/LucDemortier/pValueMethods/blob/master/cdflib/Makefile) to create a static library.
+
+The file [``cdflib.txt``](https://github.com/LucDemortier/pValueMethods/blob/master/cdflib/cdflib.txt) contains brief descriptions of the routines, literature references, and some legalities about the use of code that appeared in an ACM publication.
+
+For the p-value project I initially intended to use the GNU Scientific Library (GSL) for all statistical computations, but GSL crashed on some calculations involving the gamma distribution (apparently this is a [known bug](https://lists.gnu.org/archive/html/bug-gsl/2011-10/msg00014.html)); CDFLIB appears to be more robust.
