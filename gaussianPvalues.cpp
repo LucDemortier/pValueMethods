@@ -11,6 +11,7 @@ int main()
     double Obs;
     double gauMean;
     double uncMean;
+    double gauVar;
     double gauStD;
     double pAdjustment;
     bool excess;
@@ -22,8 +23,9 @@ int main()
     cout << "Gaussian mean: ";
     cin  >> gauMean;
     excess = Obs >= gauMean;
-    cout << "Gaussian standard deviation: ";
-    cin  >> gauStD;
+    cout << "         variance: ";
+    cin  >> gauVar;
+    gauStD = sqrt(gauVar);
     cout << "Uncertainty on Gaussian mean: ";
     cin  >> uncMean;
     cout << "P-value adjustment factor: ";
