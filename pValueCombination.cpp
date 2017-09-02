@@ -79,7 +79,7 @@ int main()
     tStat5 /= M_PI * sqrt( numPvalues * (5*numPvalues+2) / (15*numPvalues+12) );
     double pComb5 = gsl_cdf_tdist_Q(tStat5, nDegF5);
     double nSig5 = gsl_cdf_ugaussian_Qinv(pComb5);
-    cout << setw(11) << left << pComb5 << "  " << setw(8) << left << nSig5 << "  (Logistic transform)" << endl;
+    cout << setw(11) << left << pComb5 << "  " << setw(8) << left << nSig5 << "  (Logit combination, approximate)" << endl;
 
     cout << endl;
     return 0;
