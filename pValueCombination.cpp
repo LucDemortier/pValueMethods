@@ -105,7 +105,7 @@ int main()
     int npv=pValues.size();
     int tsign=1;
     for (int j=0; j<=IntPvalueSum; j++) {
-        term = npv * log(pValueSum) - gsl_sf_lngamma(numPvalues+1-j) - gsl_sf_lngamma(1.0+j);
+        term = npv * log(pValueSum-j) - gsl_sf_lngamma(numPvalues+1.0-j) - gsl_sf_lngamma(1.0+j);
         term = exp(term);
         pComb7 += tsign * term;
         tsign *= -1;
