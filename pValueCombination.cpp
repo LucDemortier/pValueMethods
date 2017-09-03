@@ -29,7 +29,7 @@ int main()
 // Sort p-values in place before starting (!!)
     sort(pValues.begin(), pValues.end());
 
-    cout << "    Combination:    " << endl;
+    cout << "   Combinations:    " << endl;
     cout << "P-Value      Nsigmas" << endl;
     cout << "---------------------" << endl;
 
@@ -112,6 +112,16 @@ int main()
     }
     double nSig7 = gsl_cdf_ugaussian_Qinv(pComb7);
     cout << setw(11) << left << pComb7 << "  " << setw(8) << left << nSig7 << "  (Edgington)" << endl;
+
+// Wilkinson's method (here we assume the p-values are already sorted in increasing order)
+    double tStat8, pComb8, nSig8, r=0;
+    for (vector<double>::const_iterator i = pValues.begin(); i != pValues.end(); ++i) {
+        tStat8 = *i;
+        r++;
+        pComb8 = gsl_cdf_beta_P(tStat8, r, numPvalues-r+1);
+        nSig8 = gsl_cdf_ugaussian_Qinv(pComb8);
+        cout << setw(11) << left << pComb8 << "  " << setw(8) << left << nSig8 << "  (Wilkinson with r=" << r << ")" << endl;
+    }
 
     cout << endl;
     return 0;
