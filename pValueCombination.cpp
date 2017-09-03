@@ -5,6 +5,7 @@
 #include <math.h>
 #include <gsl/gsl_cdf.h>
 #include <gsl/gsl_math.h>
+#include <gsl/gsl_sf_gamma.h>
 
 using namespace std;
 
@@ -24,7 +25,10 @@ int main()
         }
     }
     double numPvalues = pValues.size();
-    cout << "Read in " << numPvalues << " p-values.\n" << endl;
+
+// Sort p-values in place before starting (!!)
+    sort(pValues.begin(), pValues.end());
+
     cout << "    Combination:    " << endl;
     cout << "P-Value      Nsigmas" << endl;
     cout << "---------------------" << endl;
@@ -71,15 +75,43 @@ int main()
     double nSig4 = gsl_cdf_ugaussian_Qinv(pComb4);
     cout << setw(11) << left << pComb4 << "  " << setw(8) << left << nSig4 << "  (Stouffer)" << endl;
 
-// Logistic transformation
+// Logit combination
     double tStat5 = 0, nDegF5 = 5*numPvalues + 4;
     for (vector<double>::const_iterator i = pValues.begin(); i != pValues.end(); ++i) {
         tStat5 -= log(*i/(1-*i));
     }
-    tStat5 /= M_PI * sqrt( numPvalues * (5*numPvalues+2) / (15*numPvalues+12) );
+    tStat5 /= M_PI * sqrt( numPvalues * (nDegF5-2) / (3*nDegF5) );
     double pComb5 = gsl_cdf_tdist_Q(tStat5, nDegF5);
     double nSig5 = gsl_cdf_ugaussian_Qinv(pComb5);
     cout << setw(11) << left << pComb5 << "  " << setw(8) << left << nSig5 << "  (Logit combination, approximate)" << endl;
+
+// Simes's method (here we assume the p-values are already sorted in increasing order)
+    double* const scaledPvalues = new double[pValues.size()];
+    for (int i=0; i<pValues.size(); i++) {
+        scaledPvalues[i] = pValues[i]*(numPvalues/(i+1));
+    }
+    double pComb6 = *min_element(scaledPvalues, scaledPvalues+pValues.size()-1);
+    double nSig6 = gsl_cdf_ugaussian_Qinv(pComb6);
+    cout << setw(11) << left << pComb6 << "  " << setw(8) << left << nSig6 << "  (Simes)" << endl;
+
+// Edgington's method
+    double pValueSum=0;
+    for (vector<double>::const_iterator i = pValues.begin(); i != pValues.end(); ++i) {
+        pValueSum += *i;
+    }
+    int IntPvalueSum = floor(pValueSum);
+    double pComb7=0;
+    double term;
+    int npv=pValues.size();
+    int tsign=1;
+    for (int j=0; j<=IntPvalueSum; j++) {
+        term = npv * log(pValueSum) - gsl_sf_lngamma(numPvalues+1-j) - gsl_sf_lngamma(1.0+j);
+        term = exp(term);
+        pComb7 += tsign * term;
+        tsign *= -1;
+    }
+    double nSig7 = gsl_cdf_ugaussian_Qinv(pComb7);
+    cout << setw(11) << left << pComb7 << "  " << setw(8) << left << nSig7 << "  (Edgington)" << endl;
 
     cout << endl;
     return 0;
